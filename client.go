@@ -59,7 +59,7 @@ func (x *Client) IsPowerOn() (bool, error) {
 }
 
 // GetCurrentPower returns the current power consumption of the attached devices in full Watts.
-func (x *Client) GetCurrentPower() (int, error) {
+func (x *Client) GetCurrentPower() (float64, error) {
 	response, err := x.get("Status 10")
 	if err != nil {
 		return 0, err
@@ -71,7 +71,7 @@ func (x *Client) GetCurrentPower() (int, error) {
 		return 0, err
 	}
 
-	return x.getIntByPath(data, "StatusSNS.ENERGY.Power")
+	return x.getFloatByPath(data, "StatusSNS.ENERGY.Power")
 }
 
 func (x *Client) httpClient() gohttp.Client {
@@ -87,7 +87,7 @@ func (x *Client) get(cmd string) (*core.Response, error) {
 	return x.httpClient().Get(apiURL)
 }
 
-func (x *Client) getIntByPath(data map[string]interface{}, path string) (int, error) {
+func (x *Client) getFloatByPath(data map[string]interface{}, path string) (float64, error) {
 	keys := strings.Split(path, ".")
 
 	var (
@@ -108,13 +108,13 @@ func (x *Client) getIntByPath(data map[string]interface{}, path string) (int, er
 
 	vInt, ok := value.(int)
 	if ok {
-		return vInt, nil
+		return float64(vInt), nil
 	}
 
 	vFloat, ok := value.(float64)
 	if ok {
-		return int(vFloat), nil
+		return vFloat, nil
 	}
 
-	return 0, fmt.Errorf("value is not an integer")
+	return 0, fmt.Errorf("value is not a float")
 }

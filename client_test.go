@@ -23,7 +23,7 @@ func TestPower(t *testing.T) {
 
 	pow, err := c.GetCurrentPower()
 	a.Nil(err)
-	a.True(pow > 0)
+	a.True(pow > 0.0)
 
 	err = c.SetPowerOff()
 	a.Nil(err)
@@ -35,5 +35,5 @@ func TestPower(t *testing.T) {
 
 	pow, err = c.GetCurrentPower()
 	a.Nil(err)
-	a.Equal(0, pow)
+	a.Equal(0.0, pow)
 }
